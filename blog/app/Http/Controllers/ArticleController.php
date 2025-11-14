@@ -2,37 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Article;
+use App\Http\Requests\StoreArticleRequest;
+use App\Http\Requests\UpdateArticleRequest;
 
 class ArticleController extends Controller
 {
-    public function create()
+    public function store(StoreArticleRequest $request) //création d’un article
     {
-        // Affiche la vue du formulaire
-        return view('articles.create');
+        $article = Article::create($request->validated());
+
+        return redirect()
+            ->route('articles.edit', $article)
+            ->with('success', 'Article créé avec succès.');
     }
 
-    public function store(Request $request)
+    public function update(UpdateArticleRequest $request, Article $article)//mise à jour d’un article
     {
-        // Étape 1 — Validation des données
-        // Cette méthode vérifie les champs envoyés selon les règles définies
-        $validated = $request->validate([
-            'title'   => ['required','string','min:3','max:150'],
-            'slug'    => ['nullable','string','max:180'],
-            'content' => ['nullable','string'],
-            'tags'    => ['nullable','string'],
-        ], [
-            'title.required' => 'Le titre est obligatoire.',
-            'title.min'      => 'Le titre doit contenir au moins :min caractères.',
-            'title.max'      => 'Le titre doit contenir au plus :max caractères.',
-        ]);
+        $article->update($request->validated());
 
-        // Étape 2 — Retour utilisateur
-        // On redirige l’utilisateur vers le formulaire avec :
-        // - les anciennes valeurs saisies (old input)
-        // - un message flash de confirmation
-        return back()
-            ->withInput()
-            ->with('status', 'Formulaire reçu avec succès ! (La sauvegarde sera ajoutée au chapitre 3.1.5)');
+        return redirect()
+            ->route('articles.edit', $article)
+            ->with('success', 'Article mis à jour.');
     }
 }
