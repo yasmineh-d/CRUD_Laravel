@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\View\View;
+use App\Models\Article;
 
 class PageController extends Controller
 {
@@ -24,9 +25,10 @@ class PageController extends Controller
 
     public function articles(): View
     {
+        $articles = Article::paginate(10); // 10 articles par page
         return view('articles.index', [
-            'title'    => 'Articles (sans base de données)',
-            'articles' => $this->ARTICLES,
+            'articles' => $articles,
+            'title'    => 'Tous les articles'
         ]);
     }
 

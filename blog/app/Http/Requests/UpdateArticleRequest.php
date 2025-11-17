@@ -3,41 +3,30 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class UpdateArticleRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
         return true;
     }
 
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'slug' => $this->input('slug') ?: Str::slug($this->input('title'))
-        ]);
-    }
-
     public function rules(): array
     {
-        $article = $this->route('article');
-
         return [
             'title'   => ['required','string','min:3','max:150'],
-            'slug'    => [
-                'required','string','max:180',
-                Rule::unique('articles','slug')->ignore($article)
-            ],
-            'content' => ['required','string','min:20'],
+            'slug'    => ['nullable','string','max:180','unique:articles,slug'],
+            'excerpt' => ['nullable','string','max:255'],
+            'content' => ['nullable','string'],
         ];
     }
 
-    public function messages(): array
-    {
-        return [
-            'slug.unique' => 'Ce slug est déjà pris par un autre article.',
-        ];
-    }
+    
+
+    
 }
