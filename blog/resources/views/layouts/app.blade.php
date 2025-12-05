@@ -50,6 +50,26 @@
                                 </a>
                             @endif
                         @else
+                           @auth
+       <div class="flex items-center space-x-3">
+           <span class="text-sm text-gray-700">
+               Bonjour, {{ Auth::user()->name }}
+           </span>
+
+           @if (Auth::user()->is_admin)
+               <span class="inline-flex items-center rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+                   Admin
+               </span>
+           @else
+               <span class="inline-flex items-center rounded-full bg-sky-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+                   Auteur
+               </span>
+           @endif
+       </div>
+   @endauth
+   
+
+
                             <!-- User Dropdown -->
                             <div class="relative" x-data="{ open: false }">
                                 <button @click="open = !open" @click.away="open = false"
