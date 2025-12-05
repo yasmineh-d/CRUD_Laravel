@@ -39,7 +39,7 @@ class PageController extends Controller
             'article' => $article,
         ]);
     }
-    public function contact(): \Illuminate\View\View
+    public function contact(): View
     {
         return view('contact', [
             'title' => 'Contactez-nous'
